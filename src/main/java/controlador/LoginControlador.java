@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import vista.AccesoPermitido;
 import vista.AlertaLogin;
@@ -15,76 +14,77 @@ import modelo.AccesoBD;
 
 public class LoginControlador implements ActionListener {
 
-	Login login;
-	AccesoPermitido accesopermitido;
-	AlertaLogin alertalogin;
-	
-	public String usuario;
-	public String contraIntroducida;
-	public String contraBD;
-	public int nIntentos = 3;
-	public boolean usuarioEncontrado = false;
-	public boolean contraCorrecta = false;
+    private Login login;
+    private AccesoPermitido accesoPermitido;
+    private AlertaLogin alertaLogin;
 
-	AccesoBD c = new AccesoBD();
+    private String usuario;
+    private String contraIntroducida;
+    private String contraBD;
+    private int nIntentos = 3;
+    private boolean usuarioEncontrado = false;
+    private boolean contraCorrecta = false;
 
-	public LoginControlador(Login l, AccesoPermitido ap, AlertaLogin al) {
-	    this.login = l;
-	    this.accesopermitido = ap;
-	    this.alertalogin = al;
-	}
+    private AccesoBD accesoBD;
 
-	@Override
-	
-	
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		usuario = login.getUsuarioField().getText();
-		System.out.println(usuario);
+    public LoginControlador(Login login) {
+        this.login = login;
+        this.accesoPermitido = new AccesoPermitido("Acceso Permitido");
+        this.alertaLogin = new AlertaLogin("Alerta de Login");
+        this.accesoBD = new AccesoBD();
 
-		contraIntroducida = login.getContrasenaPassword().getText();
-		System.out.println(contraIntroducida);
+        // Asignar este controlador al botón de login
+        login.getLoginButton().addActionListener(this);
+    }
 
-		try {
-			hacerConsulta();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        usuario = login.getUsuarioField().getText();
+        contraIntroducida = new String(login.getContrasenaPassword().getPassword());
 
-	public void hacerConsulta() throws SQLException {
-		
-		Connection conexion = c.getConexion();
-		
-		String consulta = "SELECT * FROM usuarios WHERE usuario = ?";
+        try {
+            hacerConsulta();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
-		PreparedStatement statement = conexion.prepareStatement(consulta);
+    public void hacerConsulta() throws SQLException {
+        Connection conexion = accesoBD.getConexion();
+        String consulta = "SELECT * FROM usuarios WHERE usuario = ?";
 
-		statement.setString(1, usuario);
-		ResultSet resultSet = statement.executeQuery();
+        PreparedStatement statement = conexion.prepareStatement(consulta);
+        statement.setString(1, usuario);
 
-		if (resultSet.next()) {
-			usuarioEncontrado = true;
-			System.out.println("Usuario encontrado.");
-			contraBD = resultSet.getString("contra");
-			if(contraIntroducida.equals(contraBD)) {
-				contraCorrecta = true;
-				System.out.println("Contraseña Correcta");
-				login.dispose();
-				accesopermitido.hacerVisible();
-			} else {
-				contraCorrecta = false;
-				System.out.println("Contraseña Incorrecta");
-				nIntentos --;
-			}
-		} else {
-			System.out.println("Usuario no encontrado.");
-			usuarioEncontrado = false;
-			contraCorrecta = false;
-		}
+        ResultSet resultSet = statement.executeQuery();
 
-		resultSet.close();
-		statement.close();
-	}
+        if (resultSet.next()) {
+            usuarioEncontrado = true;
+            contraBD = resultSet.getString("contra");
 
+            if (contraIntroducida.equals(contraBD)) {
+                contraCorrecta = true;
+                login.dispose();
+                accesoPermitido.hacerVisible();
+            } else {
+                contraCorrecta = false;
+                nIntentos--;
+                if (nIntentos == 0) {
+                    alertaLogin.hacerVisible();
+                    login.dispose();
+                }
+            }
+        } else {
+            usuarioEncontrado = false;
+            contraCorrecta = false;
+            nIntentos--;
+            if (nIntentos == 0) {
+                alertaLogin.hacerVisible();
+                login.dispose();
+            }
+        }
+
+        resultSet.close();
+        statement.close();
+    }
 }
