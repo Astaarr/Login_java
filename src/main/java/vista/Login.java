@@ -66,10 +66,7 @@ public class Login extends JFrame {
         // JButton loginButton
         loginButton = new JButton("Login");
         loginButton.setBounds(188, 127, 82, 26);
-
-        // Asignar el controlador al botón de login
         loginButton.addActionListener(loginControlador);
-
         getContentPane().add(loginButton);
 
         mensajeLabel = new JLabel("");
@@ -79,7 +76,6 @@ public class Login extends JFrame {
         getContentPane().add(mensajeLabel);
     }
 
-    // Método para establecer el controlador
     public void setLoginControlador(LoginControlador loginControlador) {
         this.loginControlador = loginControlador;
     }

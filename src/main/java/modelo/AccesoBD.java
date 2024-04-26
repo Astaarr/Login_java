@@ -8,6 +8,7 @@ public class AccesoBD {
 	private String url = "jdbc:mysql://localhost/uf10_pantallalogin";
 	private String usuario = "root";
 	private String pword = "root";
+	
 	// Establecer conexión
 	public Connection getConexion() {
 		Connection con = null;
