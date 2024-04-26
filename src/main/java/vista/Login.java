@@ -1,9 +1,11 @@
 package vista;
 
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 
 import controlador.LoginControlador;
 
+import java.awt.Color;
 import java.awt.Font;
 
 public class Login extends JFrame {
@@ -15,6 +17,7 @@ public class Login extends JFrame {
 
     public Login(String titulo) {
         super(titulo);
+        setBackground(new Color(242, 242, 242));
         inicializarLogin();
     }
 
@@ -33,47 +36,74 @@ public class Login extends JFrame {
     }
 
     private void inicializarLogin() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(400, 200);
-        setLocationRelativeTo(null);
-        getContentPane().setLayout(null);
+    	//Adaptar la apariencia del SO donde se ejecuta
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		//Añadir titulo a la ventana
+		setTitle("Ventana Login");
+		
+		//Añadir operación de cierre de las ventanas
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		//layout absoluto
+		getContentPane().setLayout(null);
+		
+		//Tamaño y posicion de ventana
+		setSize(400, 200);
+		//setLocation(null);
+		
+		
+		/* COMPONENTES */
 
         // JLabel usuario
-        usuarioLabel = new JLabel("Usuario");
-        usuarioLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        usuarioLabel.setBounds(76, 22, 82, 26);
-        getContentPane().add(usuarioLabel);
+		usuarioLabel = new JLabel("Usuario:");
+		usuarioLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		usuarioLabel.setFont(new Font("Verdana", Font.PLAIN, 14));
+		usuarioLabel.setBounds(61, 16, 68, 19);
+		getContentPane().add(usuarioLabel);
 
 
         // JLabel contraseña
-        contrasenaLabel = new JLabel("Contraseña");
-        contrasenaLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        contrasenaLabel.setBounds(52, 70, 106, 26);
-        getContentPane().add(contrasenaLabel);
+		contrasenaLabel = new JLabel("Contraseña:");
+		contrasenaLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		contrasenaLabel.setFont(new Font("Verdana", Font.PLAIN, 14));
+		contrasenaLabel.setBounds(61, 57, 97, 19);
+		getContentPane().add(contrasenaLabel);
 
 
         // JTextField usuario
-        usuarioField = new JTextField();
-        usuarioField.setBounds(158, 25, 147, 26);
-        getContentPane().add(usuarioField);
+		usuarioField = new JTextField();
+		usuarioField.setFont(new Font("Verdana", Font.PLAIN, 14));
+		usuarioField.setBackground(new Color(242, 242, 242));
+		usuarioField.setBounds(158, 16, 146, 20);
+		usuarioField.setBorder(new MatteBorder(0, 0, 2, 0, (Color) new Color(29, 29, 27)));
+		usuarioField.setColumns(10);
+		getContentPane().add(usuarioField);
 
+		
         // JPasswordField contraseña
-        contrasenaPassword = new JPasswordField();
-        contrasenaPassword.setBounds(159, 73, 146, 26);
-        getContentPane().add(contrasenaPassword);
+		contrasenaPassword = new JPasswordField();
+		contrasenaPassword.setFont(new Font("Verdana", Font.PLAIN, 14));
+		contrasenaPassword.setBounds(158, 57, 146, 20);
+		contrasenaPassword.setBackground(new Color(242, 242, 242));
+		contrasenaPassword.setBorder(new MatteBorder(0, 0, 2, 0, (Color) new Color(29, 29, 27)));
+		getContentPane().add(contrasenaPassword);
 
-
+		
         // JButton loginButton
-        loginButton = new JButton("Login");
-        loginButton.setBounds(188, 127, 82, 26);
-        loginButton.addActionListener(loginControlador);
-        getContentPane().add(loginButton);
+		loginButton = new JButton("Entrar");
+		loginButton.setBounds(158, 111, 97, 32);
+		loginButton.setForeground(new Color(242, 242, 242));
+		loginButton.setBorderPainted(false);
+		loginButton.setBackground(new Color(29, 29, 27));
+		getContentPane().add(loginButton);
 
-        mensajeLabel = new JLabel("");
-        mensajeLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        mensajeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        mensajeLabel.setBounds(10, 112, 159, 41);
-        getContentPane().add(mensajeLabel);
+
     }
 
     public void setLoginControlador(LoginControlador loginControlador) {

@@ -16,7 +16,7 @@ public class AccesoBD {
 		try {
 			Class.forName(driver);
 			con = DriverManager.getConnection(url, usuario, pword);
-			System.out.println("Conexión establecida!");
+			//System.out.println("Conexión establecida!");
 		}
 		catch(Exception e) {
 			System.err.println("Error al conectar con la BD ");

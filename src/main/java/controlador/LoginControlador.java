@@ -30,13 +30,16 @@ public class LoginControlador implements ActionListener {
 	public LoginControlador(Login login) {
 		this.login = login;
 		this.accesoPermitido = new AccesoPermitido("Acceso Permitido");
+		accesoPermitido.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
+		
 		this.alertaLogin = new AlertaLogin("Alerta de Login");
+		alertaLogin.setLocationRelativeTo(null); // Centra el JFrame en la pantalla
 		this.accesoBD = new AccesoBD();
 
 		login.getLoginButton().addActionListener(this);
 	}
 
-	// Metodo ActionPerformed para cuando pulse el boton Login
+	// Metodo ActionPerformed para crear un evento al pulsar el boton login
 	public void actionPerformed(ActionEvent e) {
 
 		// Guarda en variables el usuario y contraseña introducida por el usuario
@@ -51,7 +54,7 @@ public class LoginControlador implements ActionListener {
 		}
 	}
 
-	// Metodo para consulta
+	// Metodo para realizar la consulta
 	public void hacerConsulta() throws SQLException {
 		// Creamos el objeto que hará referencia a la conexión de la base de datos
 		Connection conexion = accesoBD.getConexion();
@@ -66,10 +69,11 @@ public class LoginControlador implements ActionListener {
 
 		ResultSet resultSet = statement.executeQuery();
 
-		// If y else dependiendo de si el usuario es correcto o si la contraseña es correcta
+		// EVALUO LOS RESLUTADOS:
 		// Si todo es correcto, aparecerá la ventana de acceso conseguido
 		// Si el usuario está mal, nos dirá que no se ha encontrado en la base de datos
-		// Si la contraseña está mal, nos saldrá una ventana informandonos que tenemos 2 intentos más
+		// Si la contraseña está mal, nos saldrá una ventana informandonos de los intentos
+		// Si no quedan intentos, nos saldrá una ventana informandonos que hemos agotado los intentos
 		if (resultSet.next()) {
 			usuarioEncontrado = true;
 			contraBD = resultSet.getString("contra");
@@ -85,14 +89,12 @@ public class LoginControlador implements ActionListener {
 			        alertaLogin.setMensaje("Contraseña incorrecta. Se han agotado los intentos.");
 			        alertaLogin.hacerVisible();
 			        login.dispose();
-			    } else if (nIntentos == 1) {
-			        alertaLogin.setMensaje("Contraseña incorrecta. Queda: " + nIntentos + " intento");
-			        alertaLogin.hacerVisible();
-			    } else {
-					alertaLogin.setMensaje("Contraseña incorrecta. Quedan: " + nIntentos + " intentos");
+			    } else if (nIntentos > 0) {
+			        alertaLogin.setMensaje("Contraseña incorrecta. Quedan: " + nIntentos + " intentos");
 			        alertaLogin.hacerVisible();
 			    }
 			}
+			
 		} else {
 			usuarioEncontrado = false;
 			alertaLogin.setMensaje("Usuario no encontrado en la base de datos.");
